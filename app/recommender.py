@@ -1,18 +1,18 @@
-#import database as db
+import database as db
 import numpy
-
 
 class Recommender:
     def __init__(self):
+        self.database = db.DataBase()
         self.clusters = numpy.array([])
-        self.clusters = numpy.array(getClusters())
+        self.clusters = numpy.array(self.database.getClusters())
         self.clustersProfiles = numpy.array([])
-        self.clustersProfiles = numpy.array(getClustersProfiles())
+        self.clustersProfiles = numpy.array(self.database.getClustersProfiles())
 
 
     def update(self):
-        self.clusters = numpy.array(getClusters())
-        self.clustersProfiles = numpy.array(getClustersProfiles())
+        self.clusters = numpy.array(self.database.getClusters())
+        self.clustersProfiles = numpy.array(self.database.getClustersProfiles())
 
     # sums the corresponding rec_idx from clustersProfiles for each user based on the user's cluster
     #teste.getArticleUsersRecommendations(['futebol','gremio','brasileirao'], ['biancamn@gmail.com', 'bobkingg@gmail.com','alessandra.damaia@hotmail.com'])
@@ -22,7 +22,7 @@ class Recommender:
             cluster = self.clusters[self.clusters[:, 0] == user, 1]
             recIdx = 0
             for tag in articleTags:
-                recIdx += self.clustersProfiles[self.clustersProfiles[:, 1] == tag,][self.clustersProfiles[self.clustersProfiles[:, 1] == tag, 0] == cluster, 2]
+                recIdx += float(self.clustersProfiles[self.clustersProfiles[:, 1] == tag,][self.clustersProfiles[self.clustersProfiles[:, 1] == tag, 0] == cluster, 2])
             articleUsersRecommendations.append([user,recIdx])
         return articleUsersRecommendations
 
@@ -36,8 +36,7 @@ class Recommender:
         for articleTags in articlesTags:
             recIdx = 0
             for tag in articleTags[1]:
-                recIdx += self.clustersProfiles[self.clustersProfiles[:, 1] == tag,][
-                    self.clustersProfiles[self.clustersProfiles[:, 1] == tag, 0] == cluster, 2]
+                recIdx += float(self.clustersProfiles[self.clustersProfiles[:, 1] == tag,][self.clustersProfiles[self.clustersProfiles[:, 1] == tag, 0] == cluster, 2])
             articlesUserRecommendations.append([articleTags[0], recIdx])
 
         return articlesUserRecommendations
@@ -45,6 +44,7 @@ class Recommender:
     # sums the corresponding rec_idx from clustersProfiles for each user based on the user's cluster
     def getArticlesUsersRecommendations(self, articlesTags, users):
         articlesUsersRecommendations = []
+
         return articlesUsersRecommendations
 
     # sums the corresponding rec_idx from clustersProfiles that match the user's clusterProfile and the article's tags
